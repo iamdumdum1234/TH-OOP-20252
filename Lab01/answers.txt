@@ -1,0 +1,10 @@
+Câu 1:
+Khi ta nhấn "Cancel", chương trình sẽ trả lại là mình nhấn No, bởi vì chương trình chỉ đang kiểm tra rằng nút Yes có đang được nhấn hay không, chứ không phải rằng mình đang nhất nút nào.
+
+Câu 2:
+Ta có thể sử dụng JOptionPane.showOptionDialog() cùng với một chuỗi String để tạo ra các hộp hội thoại có các lựa chọn khác Yes, No hoặc Cancel.
+
+Ví dụ, trong bài EquationSolver, JOptionPane.showOptionDialog() đã được dùng để cho người dùng 3 lựa chọn khác nhau:
+
+String[] choices = {"First Degree", "First Degree Series", "Second Degree"};
+int input = JOptionPane.showOptionDialog(null, "Please select your desired equation type.", "Welcome", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, choices, choices[0]);
