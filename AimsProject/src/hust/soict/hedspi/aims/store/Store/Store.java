@@ -1,39 +1,39 @@
 package hust.soict.hedspi.aims.store.Store;
 
-import hust.soict.hedspi.aims.disc.DigitalVideoDisc.DigitalVideoDisc;
+import hust.soict.hedspi.aims.media.Media;
+
+import java.util.ArrayList;
 
 public class Store {
-    // Temporary max limit of 50000 DVDs as IDK how to make it variable for now
-    private final DigitalVideoDisc[] itemsInStore = new DigitalVideoDisc[50000];
-    private int quantity = 0;
+    private final ArrayList<Media> itemsInStore = new ArrayList<Media>();
 
-    public void addDVD(DigitalVideoDisc... dvdList) {
-        for (int i = 0; i < dvdList.length; i++) {
-            if (quantity >= 50000) {
-                System.out.println("Maximum limit of DVDs reached!");
-                System.out.println("Cannot add " + dvdList[i].getTitle() + " to the system database!");
-            }
-            itemsInStore[quantity] = dvdList[i];
-            quantity++;
-            System.out.println("Successfully added " + dvdList[i].getTitle() + " with an ID of " + dvdList[i].id + " to the system database!");
-            System.out.println("There are now " + quantity + " disc(s) in the database.");
+    public void addMedia(Media... media) {
+        for (int i = 0; i < media.length; i++) {
+            itemsInStore.add(media[i]);
+        }
+        System.out.println(media.length + " items added to the store!");
+    }
+
+    public void removeMedia(Media media) {
+        if (itemsInStore.contains(media)) {
+            itemsInStore.remove(media);
+            System.out.println(media.getTitle() + " removed from the store!");
+        }
+        else {
+            System.out.println("The media does not exist in the store!");
         }
     }
 
-    public void removeDVD(DigitalVideoDisc disc) {
-        for (int i = 0; i < quantity; i++) {
-            if (itemsInStore[i] == disc) {
-                System.out.println("Removing " + itemsInStore[i].getTitle() + " from cart...");
-                // Move everything from the targeted dvd to the left
-                for (int j = i; j < quantity - 1; j++) {
-                    itemsInStore[j] = itemsInStore[j + 1];
-                }
-                itemsInStore[quantity - 1] = null; // Remove the final duplicate from the array
-                quantity--;
-                System.out.println("Successfully removed it from the store database!");
-                return;
+    public ArrayList<Media> getItemsInStore() {
+        return itemsInStore;
+    }
+
+    public Media findMediaByTitle(String title) {
+        for (Media media : itemsInStore) {
+            if (media.getTitle().equals(title)) {
+                return media;
             }
         }
-        System.out.println("No DVD like that can be found! Please try again!");
+        return null;
     }
 }

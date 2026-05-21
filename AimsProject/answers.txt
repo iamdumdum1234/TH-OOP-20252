@@ -1,12 +1,21 @@
-Question: Is JAVA a Pass by Value or a Pass by Reference programming language?
+1. What class should implement the Comparable interface?
+Nếu dùng Comparable, thay vì tạo các lớp thực hiện Comparator, ta cho nó vào luôn lớp Media, so sánh trực tiếp trong đó.
 
-Java là một ngôn ngữ Pass-by-Value (truyền giá trị).
+2. In those classes, how should you implement the compareTo() method be to reflect the ordering that we
+want?
+Nếu sử dụng compareTo(), đầu tiên ta sẽ so sánh title của đối tượng hiện tại với các title của các đối tượng khác với this.getTitle().compareTo(other.getTitle()). Nếu khác thì trả lại luôn kết quả. Nếu tiêu đề giống thì tiếp tục so sách cost với Float.compare(this.getCost(), other.getCost()).
 
-- Subquestion 1: After the call of swap(jungleDVD, cinderellaDVD) why does the title of these two objects still remain?
-Bởi vì khi ta dùng hàm swap như vậy, các giá trị sẽ được truyền cho các đối tượng o1 và o2. 
-Sau khi o1 và o2 được tráo đổi cho nhau, các đối tượng đó sẽ lập tức được hủy bỏ, và không được truyền lại cho jungleDVD và cinderellaDVD.
+Tương tự với CostTitle, chỉ đổi chỗ cái nào trước, cái nào sau.
 
-- Subquestion 2: After the call of changeTitle(jungleDVD, cinderellaDVD.getTitle()) why is the title of the JungleDVD changed?
-Bởi vì ta đã dùng các hàm getter và setter, vì vậy đã trực tiếp ảnh hưởng lên các đối tượng đó, thay vì truyền giá trị như hàm swap ở trên.
+3. Can we have two ordering rules of the item (by title then cost and by cost then title) if we use this
+Comparable interface approach?
+Không. Chỉ có một nội quy duy nhất có thể được tạo và thực thi khi sử dụng Comparable. Muốn có từ 2 nội quy sắp xếp trở lên thì phải dùng Comparator.
 
-Để làm hàm swap hoạt động đúng, ta sẽ phải dùng hàm getter và setter. Em đã làm được trong lớp TestPassingParameter. 
+4. Suppose the DVDs has a different ordering rule from the other media types, that is by title, then
+decreasing length, then cost. How would you modify your code to allow this?
+
+Muốn sắp xếp đặc biệt cho DVD, thì đầu tiên phải Override hàm compareTo của Media trước, rồi tạo hàm compareTo mới phù hợp cho DVD.
+
+Trước tiên, chương trình sẽ phải kiểm tra xem dữ liệu mình nhập vào có đúng phải là DVD không. Nếu có, tiếp tục và cho vào. Nếu không, bỏ qua hoặc quay lại hàm compareTo của Media.
+
+Trong hàm đó, chương trình sẽ phải so sánh title, rồi so sánh length nhỏ dần, rồi cuối cùng, so sánh cost.
