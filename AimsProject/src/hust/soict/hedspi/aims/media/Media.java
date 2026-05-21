@@ -1,5 +1,7 @@
 package hust.soict.hedspi.aims.media;
 
+import java.util.Objects;
+
 public abstract class Media {
     private int id;
     private String title;
@@ -45,5 +47,19 @@ public abstract class Media {
         this.cost = cost;
     }
 
-    
+    @Override
+    public boolean equals(Object obj) {
+        // Check if the object is the same instance
+        if (obj == this) {
+            return true;
+        }
+
+        // Check if the object is not Media
+        if (!(obj instanceof Media media)) {
+            return false;
+        }
+        // Check if the object is of the same class
+        // Compare by title
+        return Objects.equals(this.title, media.title);
+    }
 }
