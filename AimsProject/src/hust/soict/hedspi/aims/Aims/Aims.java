@@ -2,13 +2,15 @@ package hust.soict.hedspi.aims.Aims;
 
 import hust.soict.hedspi.aims.cart.Cart.Cart;
 import hust.soict.hedspi.aims.media.*;
+import hust.soict.hedspi.aims.screen.StoreScreen;
 import hust.soict.hedspi.aims.store.Store.Store;
 
+import javax.swing.*;
 import java.util.Scanner;
 
 public class Aims {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        // Create store and cart
         Store store = new Store();
         Cart cart = new Cart();
 
@@ -16,13 +18,28 @@ public class Aims {
         DigitalVideoDisc dvd1 = new DigitalVideoDisc("The Lion King", "Animation", "Roger Allers", 19.95f);
         DigitalVideoDisc dvd2 = new DigitalVideoDisc("Star Wars", "Science Fiction", "George Lucas", 24.95f);
         DigitalVideoDisc dvd3 = new DigitalVideoDisc("Aladdin", "Animation", 18.99f);
-        store.addMedia(dvd1, dvd2, dvd3);
+        Book book1 = new Book("Java Programming", "Technology", 29.99f, null);
+        Book book2 = new Book("Design Patterns", "Technology", 49.99f, null);
+        CompactDisc cd1 = new CompactDisc("Greatest Hits", "Music", 15.99f, 120, null, "Various Artists", null);
 
-        handleMainMenu(scanner, store, cart);
-        scanner.close();
-        System.out.println("Goodbye!");
-        System.exit(0);
+        store.addMedia(dvd1, dvd2, dvd3, book1, book2, cd1);
+
+        // Fill remaining slots with more media
+        store.addMedia(
+            new DigitalVideoDisc("The Matrix", "Science Fiction", "Wachowski Brothers", 22.95f),
+            new Book("Clean Code", "Technology", 39.99f, null),
+            new CompactDisc("Abbey Road", "Music", 14.99f, 56, null, "The Beatles", null)
+        );
+
+        // Launch GUI
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new StoreScreen(store, cart);
+            }
+        });
     }
+
 
     public static void showMenu() {
         System.out.println("AIMS: ");
