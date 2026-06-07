@@ -1,6 +1,7 @@
 package hust.soict.hedspi.aims.Aims;
 
 import hust.soict.hedspi.aims.cart.Cart.Cart;
+import hust.soict.hedspi.aims.exception.PlayerException;
 import hust.soict.hedspi.aims.media.*;
 import hust.soict.hedspi.aims.screen.StoreScreen;
 import hust.soict.hedspi.aims.store.Store.Store;
@@ -15,29 +16,24 @@ public class Aims {
         Cart cart = new Cart();
 
         // Sample data for testing
-        DigitalVideoDisc dvd1 = new DigitalVideoDisc("The Lion King", "Animation", "Roger Allers", 19.95f);
+        DigitalVideoDisc dvd1 = new DigitalVideoDisc("The Lion King", "Animation", 19.95f, 60, "Roger Allers");
         DigitalVideoDisc dvd2 = new DigitalVideoDisc("Star Wars", "Science Fiction", "George Lucas", 24.95f);
         DigitalVideoDisc dvd3 = new DigitalVideoDisc("Aladdin", "Animation", 18.99f);
         Book book1 = new Book("Java Programming", "Technology", 29.99f, null);
         Book book2 = new Book("Design Patterns", "Technology", 49.99f, null);
         CompactDisc cd1 = new CompactDisc("Greatest Hits", "Music", 15.99f, 120, null, "Various Artists", null);
-
         store.addMedia(dvd1, dvd2, dvd3, book1, book2, cd1);
 
         // Fill remaining slots with more media
         store.addMedia(
-            new DigitalVideoDisc("The Matrix", "Science Fiction", "Wachowski Brothers", 22.95f),
-            new Book("Clean Code", "Technology", 39.99f, null),
-            new CompactDisc("Abbey Road", "Music", 14.99f, 56, null, "The Beatles", null)
+                new DigitalVideoDisc("The Matrix", "Science Fiction", "Wachowski Brothers", 22.95f),
+                new Book("Clean Code", "Technology", 39.99f, null),
+                new CompactDisc("Abbey Road", "Music", 14.99f, 56, null, "The Beatles", null)
         );
 
-        // Launch GUI
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new StoreScreen(store, cart);
-            }
-        });
+        // Start GUI
+        javafx.application.Platform.setImplicitExit(false);
+        new StoreScreen(store, cart);
     }
 
 
@@ -52,7 +48,7 @@ public class Aims {
         System.out.println("Please choose a number: 0-1-2-3");
     }
 
-    public static void handleMainMenu(Scanner scanner, Store store, Cart cart) {
+    public static void handleMainMenu(Scanner scanner, Store store, Cart cart) throws PlayerException {
         int choice = -1;
         while (choice != 0) {
             showMenu();
@@ -94,7 +90,7 @@ public class Aims {
         System.out.println("Please choose a number: 0-1-2-3-4");
     }
 
-    public static void handleViewStore(Scanner scanner, Store store, Cart cart) {
+    public static void handleViewStore(Scanner scanner, Store store, Cart cart) throws PlayerException {
         System.out.println("--- Store Items ---");
         for (Media media : store.getItemsInStore()) {
             System.out.println(media.toString());
@@ -140,12 +136,12 @@ public class Aims {
         System.out.println("Please choose a number: 0-1-2");
     }
 
-    public static void handleMediaDetails(Scanner scanner, Store store, Cart cart) {
+    public static void handleMediaDetails(Scanner scanner, Store store, Cart cart) throws PlayerException {
         System.out.println("Please enter the title of the media: ");
         String title = scanner.nextLine();
         Media media = store.findMediaByTitle(title);
         if (media != null) {
-            System.out.println(media.toString());
+            System.out.println(media);
             int choice = -1;
             while (choice != 0) {
                 mediaDetailsMenu();
@@ -159,7 +155,14 @@ public class Aims {
                             break;
                         case 2:
                             if (media instanceof Playable) {
-                                ((Playable) media).play();
+                                try {
+                                    ((Playable) media).play();
+                                } catch (PlayerException e) {
+                                    System.out.println(e.getMessage());
+                                    System.out.println(e.toString());
+                                    e.printStackTrace();
+                                    JOptionPane.showMessageDialog(null, e.getMessage(), "Play Error", JOptionPane.ERROR_MESSAGE);
+                                }
                             } else {
                                 System.out.println("This media is not playable.");
                             }
@@ -195,13 +198,20 @@ public class Aims {
         }
     }
 
-    public static void handlePlayMedia(Scanner scanner, Store store) {
+    public static void handlePlayMedia(Scanner scanner, Store store) throws PlayerException {
         System.out.println("Please enter the title of the media: ");
         String title = scanner.nextLine();
         Media media = store.findMediaByTitle(title);
         if (media != null) {
             if (media instanceof Playable) {
-                ((Playable) media).play();
+                try {
+                    ((Playable) media).play();
+                } catch (PlayerException e) {
+                    System.out.println(e.getMessage());
+                    System.out.println(e.toString());
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Play Error", JOptionPane.ERROR_MESSAGE);
+                }
             } else {
                 System.out.println("This media is not playable.");
             }
@@ -250,7 +260,7 @@ public class Aims {
         System.out.println("Please choose a number: 0-1-2-3-4-5");
     }
 
-    public static void handleSeeCurrentCart(Scanner scanner, Cart cart) {
+    public static void handleSeeCurrentCart(Scanner scanner, Cart cart) throws PlayerException {
         System.out.println("--- Current Cart ---");
         for (Media media : cart.getItemsOrdered()) {
             System.out.println(media.toString());
@@ -302,14 +312,14 @@ public class Aims {
             System.out.println("Enter ID: ");
             int id = scanner.nextInt();
             scanner.nextLine();
-            Media m = cart.searchById(id);
-            if (m != null) System.out.println(m.toString());
+            Media m = (Media) cart.searchById(id);
+            if (m != null) System.out.println(m);
             else System.out.println("Not found.");
         } else if (choice == 2) {
             System.out.println("Enter Title: ");
             String title = scanner.nextLine();
-            Media m = cart.searchByTitle(title);
-            if (m != null) System.out.println(m.toString());
+            Media m = (Media) cart.searchByTitle(title);
+            if (m != null) System.out.println(m);
             else System.out.println("Not found.");
         }
     }
@@ -332,7 +342,7 @@ public class Aims {
     public static void handleRemoveFromCart(Scanner scanner, Cart cart) {
         System.out.println("Enter title to remove: ");
         String title = scanner.nextLine();
-        Media m = cart.searchByTitle(title);
+        Media m = (Media) cart.searchByTitle(title);
         if (m != null) {
             cart.removeMedia(m);
         } else {
@@ -340,14 +350,23 @@ public class Aims {
         }
     }
 
-    public static void handlePlayMediaInCart(Scanner scanner, Cart cart) {
+    public static void handlePlayMediaInCart(Scanner scanner, Cart cart) throws PlayerException {
         System.out.println("Enter title to play: ");
         String title = scanner.nextLine();
-        Media m = cart.searchByTitle(title);
+        Media m = (Media) cart.searchByTitle(title);
         if (m != null) {
-            ((Playable) m).play();
-        } else {
-            System.out.println("Not found or not playable.");
+            if (m instanceof Playable) {
+                try {
+                    ((Playable) m).play();
+                } catch (PlayerException e) {
+                    System.out.println(e.getMessage());
+                    System.out.println(e.toString());
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Play Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                System.out.println("Not found or not playable.");
+            }
         }
     }
 }

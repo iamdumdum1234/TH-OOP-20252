@@ -1,18 +1,17 @@
 package hust.soict.hedspi.aims.cart.Cart;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import hust.soict.hedspi.aims.media.Media;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.util.Collections;
 
 public class Cart {
     // Standard variables from lab assignment
-    private final List<Media> itemsOrdered = new ArrayList<Media>();
+    private final ObservableList<Media> itemsOrdered = FXCollections.observableArrayList();
 
     public void addMedia(Media... mediaList) {
-        for (int i = 0; i < mediaList.length; i++) {
-            itemsOrdered.add(mediaList[i]);
-        }
+        Collections.addAll(itemsOrdered, mediaList);
     }
 
     public void removeMedia(Media media) {
@@ -30,34 +29,36 @@ public class Cart {
         itemsOrdered.clear();
     }
 
-    public List<Media> getItemsOrdered() {
+    public ObservableList<Media> getItemsOrdered() {
         return itemsOrdered;
     }
 
-    public Media searchById(int id) {
+    public ObservableList<Media> searchById(int id) {
+        ObservableList<Media> result = FXCollections.observableArrayList();
         for (Media media : itemsOrdered) {
             if (media.getId() == id) {
-                return media;
+                result.add(media);
             }
         }
-        return null;
+        return result;
     }
 
-    public Media searchByTitle(String title) {
+    public ObservableList<Media> searchByTitle(String title) {
+        ObservableList<Media> result = FXCollections.observableArrayList();
         for (Media media : itemsOrdered) {
             if (media.getTitle().equalsIgnoreCase(title)) {
-                return media;
+                result.add(media);
             }
         }
-        return null;
+        return result;
     }
 
     public void sortByTitle() {
-        Collections.sort(itemsOrdered, Media.COMPARE_BY_TITLE_COST);
+        itemsOrdered.sort(Media.COMPARE_BY_TITLE_COST);
     }
 
     public void sortByCost() {
-        Collections.sort(itemsOrdered, Media.COMPARE_BY_COST_TITLE);
+        itemsOrdered.sort(Media.COMPARE_BY_COST_TITLE);
     }
 
 

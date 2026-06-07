@@ -10,3 +10,5 @@ Lab 02: Complete (maybe)
 Lab 03: Complete (also maybe)
 
 Lab 04: Complete (eh)
+
+Lab 05: Complete (maybe, probably, not so sure, I think I missed something)

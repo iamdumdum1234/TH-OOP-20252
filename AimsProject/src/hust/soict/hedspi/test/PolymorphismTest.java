@@ -1,16 +1,16 @@
 package hust.soict.hedspi.test;
 
+import hust.soict.hedspi.aims.media.Book;
 import hust.soict.hedspi.aims.media.CompactDisc;
 import hust.soict.hedspi.aims.media.DigitalVideoDisc;
 import hust.soict.hedspi.aims.media.Media;
-import hust.soict.hedspi.aims.media.Book;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PolymorphismTest {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         List<Media> MediaList = new ArrayList<Media>();
 
         CompactDisc cd1 = new CompactDisc("CD: The Movie", "Miscellaneous", 10.0f, 120, "Director Name", "Artist Name", null);

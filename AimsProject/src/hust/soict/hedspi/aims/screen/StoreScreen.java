@@ -21,22 +21,51 @@ public class StoreScreen extends JFrame {
     }
 
     JMenuBar createMenuBar() {
-
         JMenu menu = new JMenu("Options");
 
         JMenu smUpdateStore = new JMenu("Update Store");
-        smUpdateStore.add(new JMenuItem("Add Book"));
-        smUpdateStore.add(new JMenuItem("Add CD"));
-        smUpdateStore.add(new JMenuItem("Add DVD"));
+
+        JMenuItem addBook = new JMenuItem("Add Book");
+        addBook.addActionListener(e -> {
+            new AddBookToStoreScreen(store, cart);
+            dispose();
+        });
+
+        JMenuItem addCD = new JMenuItem("Add CD");
+        addCD.addActionListener(e -> {
+            new AddCDToStoreScreen(store, cart);
+            dispose();
+        });
+
+        JMenuItem addDVD = new JMenuItem("Add DVD");
+        addDVD.addActionListener(e -> {
+            new AddDVDToStoreScreen(store, cart);
+            dispose();
+        });
+
+        smUpdateStore.add(addBook);
+        smUpdateStore.add(addCD);
+        smUpdateStore.add(addDVD);
+
+        JMenuItem viewStore = new JMenuItem("View store");
+        viewStore.addActionListener(e -> {
+            new StoreScreen(store, cart);
+            dispose();
+        });
+
+        JMenuItem viewCart = new JMenuItem("View cart");
+        viewCart.addActionListener(e -> {
+            new CartScreen(cart, store);
+            dispose();
+        });
 
         menu.add(smUpdateStore);
-        menu.add(new JMenuItem("View store"));
-        menu.add(new JMenuItem("View cart"));
+        menu.add(viewStore);
+        menu.add(viewCart);
 
         JMenuBar menuBar = new JMenuBar();
         menuBar.setLayout(new FlowLayout(FlowLayout.LEFT));
         menuBar.add(menu);
-
         return menuBar;
     }
 
@@ -52,6 +81,12 @@ public class StoreScreen extends JFrame {
         JButton cart = new JButton("View cart");
         cart.setPreferredSize(new Dimension(100, 50));
         cart.setMaximumSize(new Dimension(100, 50));
+        cart.addActionListener(e -> {
+            new CartScreen(this.cart, this.store);
+            dispose();
+        });
+        cart.setPreferredSize(new Dimension(100, 50));
+        cart.setMaximumSize(new Dimension(100, 50));
 
         header.add(Box.createRigidArea(new Dimension(10, 10)));
         header.add(title);
@@ -63,14 +98,12 @@ public class StoreScreen extends JFrame {
     }
 
     JPanel createCenter() {
-
         JPanel center = new JPanel();
-        center.setLayout(new GridLayout(3, 3, 2, 2));
+        center.setLayout(new GridLayout(0, 3, 2, 2));
 
         ArrayList<Media> mediaInStore = store.getItemsInStore();
-        for (int i = 0; i < 9; i++) {
-            MediaStore cell = new MediaStore(mediaInStore.get(i), cart);
-            center.add(cell);
+        for (int i = 0; i < Math.min(9, mediaInStore.size()); i++) {
+            center.add(new MediaStore(mediaInStore.get(i), cart));
         }
         return center;
     }

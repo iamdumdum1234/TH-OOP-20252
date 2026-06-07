@@ -1,8 +1,5 @@
 package hust.soict.hedspi.test.cart.CartTest;
 
-import hust.soict.hedspi.aims.cart.Cart.Cart;
-import hust.soict.hedspi.aims.media.DigitalVideoDisc;
-
 public class CartTest {
     /* public static void main (String[] args) {
         // Commented out until fixed
