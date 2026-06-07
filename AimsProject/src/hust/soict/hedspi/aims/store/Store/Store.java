@@ -3,14 +3,13 @@ package hust.soict.hedspi.aims.store.Store;
 import hust.soict.hedspi.aims.media.Media;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Store {
     private final ArrayList<Media> itemsInStore = new ArrayList<Media>();
 
     public void addMedia(Media... media) {
-        for (int i = 0; i < media.length; i++) {
-            itemsInStore.add(media[i]);
-        }
+        Collections.addAll(itemsInStore, media);
         System.out.println(media.length + " items added to the store!");
     }
 
